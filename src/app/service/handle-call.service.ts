@@ -16,7 +16,7 @@ export class HandleCallService {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(content)
+          body: JSON.stringify(content ? content : {})
         })
         .then(response => response.json())
         .then(responseJson => {

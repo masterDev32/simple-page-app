@@ -18,7 +18,7 @@ export class ListComponent implements OnInit {
     if (value) {
       this.userChanged(value);
     }
-  }; 
+  };
   constructor(public service: HandleCallService) { }
 
   ngOnInit() {
@@ -34,7 +34,7 @@ export class ListComponent implements OnInit {
     .catch(err => console.log('error', err))
   }
 
-  getUserName(userId){
+  getUserName(userId) {
     return this.users && this.users.length ? this.users.find(element => element.id === userId).name : '';
   }
 

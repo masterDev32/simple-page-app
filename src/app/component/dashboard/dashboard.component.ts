@@ -31,5 +31,4 @@ export class DashboardComponent implements OnInit {
     const user = this.users.filter(user => user.name === username);
     this.selectedUser = user.length ? user[0].id : '0';
   }
-
 }
