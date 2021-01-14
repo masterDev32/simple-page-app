@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HandleCallService } from 'src/app/service/handle-call.service';
+import { BsModalService } from 'ngx-bootstrap';
+import { CommonDataService } from 'src/app/service/common-data.service';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,27 +10,18 @@ import { HandleCallService } from 'src/app/service/handle-call.service';
 })
 export class DashboardComponent implements OnInit {
 
-  showList = true;
-  users;
-  selectedUser;
-  constructor(public service: HandleCallService) { }
+  constructor(public commonData: CommonDataService, public modalService: BsModalService) { }
 
   ngOnInit() {
-    this.loadUsers();
+    this.commonData.loadData();
   }
 
-  toggleCreatePost() {
-    this.showList = !this.showList;
-  }
-
-  loadUsers() {
-    this.service.getData('http://jsonplaceholder.typicode.com/users')
-    .then(response => this.users = response)
-    .catch(err => console.log('error', err))
+  openModal() {
+    this.modalService.show(ModalComponent);
   }
 
   selectChange(username) {
-    const user = this.users.filter(user => user.name === username);
-    this.selectedUser = user.length ? user[0].id : '0';
+    const user = this.commonData.users.filter(user => user.name === username);
+    this.commonData.setSelectedUser(user.length ? user[0].id : 0);
   }
 }

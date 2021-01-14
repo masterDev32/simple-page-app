@@ -1,54 +1,49 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { HandleCallService } from 'src/app/service/handle-call.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { CommonDataService } from 'src/app/service/common-data.service';
+import { takeUntil } from 'rxjs/operators';
+import { BsModalService } from 'ngx-bootstrap';
+import { FormulaireComponent } from '../formulaire/formulaire.component';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
 
-  allPosts;
+  destroy = new Subject();
   posts = [];
-  showModal = false;
-  body = '';
-  title = '';
-  @Input() users = [];
-  @Input() set userValueChanged(value) {
-    if (value) {
-      this.userChanged(value);
-    }
-  };
-  constructor(public service: HandleCallService) { }
+  dataPerPage = [] 
+ 
+  constructor(public commonData: CommonDataService, public modalService: BsModalService) { }
 
   ngOnInit() {
-    this.loadData()
+    this.commonData.getPosts().pipe(takeUntil(this.destroy))
+      .subscribe(posts => {
+        this.posts = posts;
+        this.dataPerPage = this.posts.slice(0, 10);
+      });
   }
 
-  loadData() {
-    this.service.getData('http://jsonplaceholder.typicode.com/posts')
-    .then(response => {
-      this.allPosts = response;
-      this.posts = [...this.allPosts];
-    })
-    .catch(err => console.log('error', err))
-  }
-
-  getUserName(userId) {
-    return this.users && this.users.length ? this.users.find(element => element.id === userId).name : '';
+  ngOnDestroy() {
+    this.destroy.next();
+    this.destroy.complete();
   }
 
   editPost(post) {
-    this.showModal = true;
-    this.body = post.body;
-    this.title = post.title;
+    const { body, title, userId } = post;
+    const initialState = { 
+      body,
+      title,
+      userId
+    };
+    this.modalService.show(FormulaireComponent, { initialState });
   }
 
-  updateShowModal(value) {
-    this.showModal = value;
-  }
-
-  userChanged(newUserId) {
-    this.posts = parseInt(newUserId, 10) > 0 ? this.allPosts.filter(post => post.userId === newUserId) : this.allPosts;
+  pageChanged(event): void {
+    const startItem = (event.page - 1) * event.itemsPerPage;
+    const endItem = event.page * event.itemsPerPage;
+    this.dataPerPage = this.posts.slice(startItem, endItem);
   }
 }

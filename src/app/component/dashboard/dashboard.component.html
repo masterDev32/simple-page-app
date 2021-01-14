@@ -2,23 +2,19 @@
   <h3>My App</h3>
 </div>
 <div class="main">
-  <div class=" float-left" *ngIf="showList">
+  <div class="float-left">
     <select class="custom-select" (change)="selectChange($event.currentTarget.value)">
       <option selected>Select User</option>
-      <option *ngFor="let user of users" [ngValue]="user">{{ user.name }}</option>
+      <option *ngFor="let user of commonData.users" [ngValue]="user">{{ user.name }}</option>
     </select>
   </div>
   <div>
     <button type="button" class="btn btn-lg btn-outline-dark float-right createBtn"
-    (click)="toggleCreatePost()">{{ showList ? 'New post' : 'Back'}}</button>
+    (click)="openModal()">New post</button>
   </div>
 </div>
-<div *ngIf="showList" class="main">
+
+<div class="main">
   <app-list
-  [users]="users"
-  [userValueChanged]="selectedUser"
   ></app-list>
-</div>
-<div *ngIf="!showList" class="container" id="form-frame">
-  <app-formulaire ></app-formulaire>
 </div>

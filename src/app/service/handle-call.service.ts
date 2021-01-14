@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,40 +10,21 @@ export class HandleCallService {
 
   save(url, content) {
     if (url) {
-      return new Promise((resolve, reject) => {
-        fetch(url, {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(content ? content : {})
-        })
-        .then(response => response.json())
-        .then(responseJson => {
-          resolve(responseJson);
-        })
-        .catch(err => {
-          console.log('error', err);
-          reject(err);
-        })
-      })
+      return from(fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(content ? content : {})
+        }).then(response => response.json())
+      );
     }
   }
 
-  getData(url) {
+  getData(url): Observable<any[]> {
     if (url) {
-      return new Promise((resolve, reject) => {
-        fetch(url)
-        .then(response => response.json())
-        .then(responseJson => {
-          resolve(responseJson);
-        })
-        .catch(err => {
-          console.log('error', err);
-          reject(err);
-        })
-      })
+      return from(fetch(url).then(response => response.json()));
     }
   }
 }

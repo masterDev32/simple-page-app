@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppModule } from '../../app.module';
-import { HandleCallService } from 'src/app/service/handle-call.service';
-
 import { FormulaireComponent } from './formulaire.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonDataService } from 'src/app/service/common-data.service';
+import { BsModalRef } from 'ngx-bootstrap';
 
 describe('FormulaireComponent', () => {
   let component: FormulaireComponent;
@@ -12,7 +12,7 @@ describe('FormulaireComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AppModule ],
-      providers: [HandleCallService],
+      providers: [CommonDataService, BsModalRef],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();

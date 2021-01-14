@@ -1,5 +1,7 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { BsModalRef } from 'ngx-bootstrap';
+import { CommonDataService } from 'src/app/service/common-data.service';
 import { HandleCallService } from 'src/app/service/handle-call.service';
 
 @Component({
@@ -8,28 +10,19 @@ import { HandleCallService } from 'src/app/service/handle-call.service';
   styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent implements OnInit {
-  error = false;
-  @Input() body;
-  @Input() title;
-  @Input() show;
-  @Output() showChanged = new EventEmitter();
-  constructor(public service: HandleCallService) { }
+  content = new FormControl('', [
+    Validators.required,
+    Validators.minLength(5)
+  ]);
+  title = 'New Post';
 
-  ngOnInit() {
-  }
+  constructor(public bsModalRef: BsModalRef, public commonData: CommonDataService) { }
 
-  modalClosed() {
-    this.showChanged.emit(false);
-  }
+  ngOnInit() {}
 
   save() {
-    this.service.save('http://jsonplaceholder.typicode.com/users', { body: this.body, title: this.title })
-    .then(response => console.log(response))
-    .catch(err => {
-      console.log('error', err);
-      this.error = true;
-    })
-    this.showChanged.emit(false);
+    this.commonData.service.save(`${this.commonData.config.endpoint}/users`, { body: this.content.value, title: this.title });
+    this.bsModalRef.hide();
   }
 
 }

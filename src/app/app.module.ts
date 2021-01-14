@@ -10,6 +10,8 @@ import { FormulaireComponent } from './component/formulaire/formulaire.component
 import { ModalComponent } from './component/modal/modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { APP_BASE_HREF } from '@angular/common';
+import { ModalModule } from 'ngx-bootstrap';
+import { PaginationModule } from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
@@ -19,12 +21,15 @@ import { APP_BASE_HREF } from '@angular/common';
     FormulaireComponent,
     ModalComponent
   ],
+  entryComponents:[ FormulaireComponent, ModalComponent ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ModalModule.forRoot(),
+    PaginationModule.forRoot()
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' }
